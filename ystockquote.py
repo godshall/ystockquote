@@ -460,7 +460,7 @@ def get_short_ratio(symbol):
     return _request(symbol, 's7')
 
 
-def get_historical_prices(symbol, start_date, end_date):
+def get_historical_prices(symbol, start_date, end_date, interval='d'):
     """
     Get historical prices for the given ticker symbol.
     Date format is 'YYYY-MM-DD'
@@ -468,6 +468,10 @@ def get_historical_prices(symbol, start_date, end_date):
     Returns a nested dictionary (dict of dicts).
     outer dict keys are dates ('YYYY-MM-DD')
     """
+    # Set the default interval
+    if interval not in ['d', 'w', 'm' 'v']:
+        interval = 'd'
+
     params = urlencode({
         's': symbol,
         'a': int(start_date[5:7]) - 1,
@@ -476,7 +480,7 @@ def get_historical_prices(symbol, start_date, end_date):
         'd': int(end_date[5:7]) - 1,
         'e': int(end_date[8:10]),
         'f': int(end_date[0:4]),
-        'g': 'd',
+        'g': interval,
         'ignore': '.csv',
     })
     url = 'http://ichart.yahoo.com/table.csv?%s' % params
